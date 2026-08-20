@@ -1,0 +1,132 @@
+/* ==========================================================================
+   RAÍZES DE AFETO - ADAPTAÇÕES RESPONSIVAS
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .hero-content {
+    margin: 0 auto;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Contato: formulário empilha sob o texto de apresentação */
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 360px;
+    height: 100vh;
+    background-color: var(--cor-fundo);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.05);
+    padding: 6rem 2rem 2rem 2rem;
+    transition: var(--transicao);
+    z-index: 999;
+  }
+
+  .nav-menu.active {
+    right: 0;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Formulário de contato: 2 colunas viram 1 no tablet/celular */
+  .form-group-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .header-container {
+    align-items: center;
+  }
+
+  .hero {
+    padding-top: 8rem !important;
+    padding-bottom: 4rem !important;
+  }
+
+  .logo img {
+    height: 40px;
+  }
+
+  /* Seções internas (Coleções, Sobre) reduzem o respiro vertical no topo */
+  .page-hero {
+    padding-top: 7.5rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn {
+    width: 100%;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .cards-grid,
+  .services-grid,
+  .media-grid,
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .raizes-whatsapp-btn {
+    padding: 0.7rem 1.1rem;
+    bottom: 1.2rem;
+    right: 1.2rem;
+  }
+
+  .raizes-whatsapp-text {
+    font-size: 0.8rem;
+  }
+
+  .service-card,
+  .card-panel {
+    padding: 1.6rem 1.2rem;
+  }
+
+  .form-control {
+    padding: 0.75rem 0.9rem;
+  }
+}
