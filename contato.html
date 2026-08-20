@@ -13,6 +13,10 @@
     .form-feedback { margin-top: 1rem; padding: 1rem; border-radius: var(--borda-raio); display: none; }
     .form-feedback.success { display: block; background: #e8f5e9; color: #2e7d32; }
     .form-feedback.error { display: block; background: #ffebee; color: #c62828; }
+
+    @media (max-width: 768px) {
+      .contact-section { padding: 7.5rem 0 3rem 0; }
+    }
   </style>
 </head>
 <body>
@@ -20,6 +24,9 @@
   <header class="header">
     <div class="container header-container">
       <a href="index.html" class="logo"><img src="assets/logo/logo.png" alt="Raízes de Afeto"></a>
+      <button class="menu-toggle" aria-label="Abrir menu de navegação" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
       <nav class="nav-menu">
         <ul class="nav-list">
           <li><a href="index.html" class="nav-link">Início</a></li>
