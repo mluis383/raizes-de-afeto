@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Administrativo | Raízes de Afeto</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background-color: var(--cor-fundo-secundario);
+    }
+    .login-card {
+      background: var(--cor-branco);
+      padding: 2.5rem;
+      border-radius: var(--borda-raio);
+      border: 1px solid var(--cor-borda);
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--sombra-card);
+      text-align: center;
+    }
+    .login-logo {
+      height: 48px;
+      margin-bottom: 2rem;
+    }
+    .login-error {
+      color: #c62828;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-card">
+      <img src="assets/logo/logo.png" alt="Raízes de Afeto" class="login-logo">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Acesso Administrativo</h2>
+
+      <form id="login-form">
+        <div class="form-group" style="text-align: left; margin-bottom: 1rem;">
+          <label for="login-email">E-mail</label>
+          <input type="email" id="login-email" class="form-control" style="width:100%; padding: 0.75rem; border:1px solid var(--cor-borda); border-radius:4px;" required>
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-bottom: 1.5rem;">
+          <label for="login-password">Senha</label>
+          <input type="password" id="login-password" class="form-control" style="width:100%; padding: 0.75rem; border:1px solid var(--cor-borda); border-radius:4px;" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+        <div id="login-error" class="login-error">Credenciais inválidas ou Supabase não configurado.</div>
+      </form>
+
+      <p style="margin-top: 1.5rem; font-size: 0.8rem;"><a href="index.html">&larr; Voltar ao site público</a></p>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-service.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      const errorDiv = document.getElementById('login-error');
+
+      if (!supabaseClient) {
+        errorDiv.textContent = "Supabase não configurado. Preencha 'supabase-config.js'.";
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        errorDiv.textContent = "Erro de autenticação: " + error.message;
+        errorDiv.style.display = 'block';
+      } else {
+        window.location.href = 'admin.html';
+      }
+    });
+  </script>
+  
+</body>
+</html>

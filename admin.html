@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo | Raízes de Afeto</title>
+  <link rel="stylesheet" href="css/admin.css">
+  <!-- Supabase CDN JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- SIDEBAR COM TODAS AS 10 SEÇÕES -->
+  <aside class="admin-sidebar">
+    <div class="brand">Raízes de Afeto</div>
+    <ul class="admin-menu">
+      <li class="admin-menu-item active" onclick="switchTab('solicitacoes', event)">Solicitações</li>
+      <li class="admin-menu-item" onclick="switchTab('midia', event)">Imagens e Mídia</li>
+      <li class="admin-menu-item" onclick="switchTab('categorias', event)">Categorias</li>
+      <li class="admin-menu-item" onclick="switchTab('conteudos', event)">Títulos e Conteúdos</li>
+      <li class="admin-menu-item" onclick="switchTab('colecoes', event)">Coleções</li>
+      <li class="admin-menu-item" onclick="switchTab('portfolio', event)">Portfólio</li>
+      <li class="admin-menu-item" onclick="switchTab('servicos', event)">Serviços</li>
+      <li class="admin-menu-item" onclick="switchTab('depoimentos', event)">Depoimentos</li>
+      <li class="admin-menu-item" onclick="switchTab('instagram', event)">Galeria Instagram</li>
+      <li class="admin-menu-item" onclick="switchTab('configuracoes', event)">Configurações</li>
+    </ul>
+    <div style="margin-top:auto; padding-top:1.5rem; border-top:1px solid rgba(0,0,0,0.08);">
+      <div id="admin-user-label" style="font-size:0.8rem; opacity:0.7; margin-bottom:8px;"></div>
+      <button type="button" class="btn-secondary" style="width:100%;" onclick="logoutAdmin()">Sair</button>
+    </div>
+  </aside>
+
+  <!-- ÁREA DE CONTEÚDO DINÂMICA -->
+  <main class="admin-content">
+
+    <!-- SEÇÃO: SOLICITAÇÕES DE ORÇAMENTO -->
+    <section id="tab-solicitacoes" class="tab-pane">
+      <h2>Solicitações de Orçamento</h2>
+
+      <!-- CARDS DE RESUMO -->
+      <div class="summary-grid">
+        <div class="summary-card"><div class="number" id="count-nova">0</div><div class="label">Novas</div></div>
+        <div class="summary-card"><div class="number" id="count-analise">0</div><div class="label">Em análise</div></div>
+        <div class="summary-card"><div class="number" id="count-respondida">0</div><div class="label">Respondidas</div></div>
+        <div class="summary-card"><div class="number" id="count-concluida">0</div><div class="label">Concluídas</div></div>
+      </div>
+
+      <!-- FILTROS E BUSCA -->
+      <div class="card-panel" style="display:flex; gap:16px; flex-wrap:wrap;">
+        <input type="text" id="req-search" placeholder="Buscar por nome, e-mail ou WhatsApp..." style="flex:1; padding:10px; border-radius:8px; border:1px solid #E2D7D0;">
+        <select id="req-filter-status" style="padding:10px; border-radius:8px; border:1px solid #E2D7D0;">
+          <option value="">Todos os status</option>
+          <option value="Nova">Nova</option>
+          <option value="Em análise">Em análise</option>
+          <option value="Respondida">Respondida</option>
+          <option value="Concluída">Concluída</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="custom-table" id="table-solicitacoes">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Contato</th>
+              <th>Evento / Data</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="list-solicitacoes">
+            <!-- Inserido dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SEÇÃO: IMAGENS E MÍDIA -->
+    <section id="tab-midia" class="tab-pane" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <h2>Biblioteca de Imagens e Mídia</h2>
+        <button class="btn-primary" onclick="openUploadModal()">+ Enviar Imagem</button>
+      </div>
+
+      <!-- BARRA DE BUSCA E FILTRO -->
+      <div class="card-panel" style="display:flex; gap:16px; flex-wrap:wrap;">
+        <input type="text" id="media-search" placeholder="Pesquisar por nome ou legenda..." oninput="filterMedia()" style="flex:1; padding:10px; border-radius:8px; border:1px solid #E2D7D0;">
+        <select id="media-filter-category" onchange="filterMedia()" style="padding:10px; border-radius:8px; border:1px solid #E2D7D0;">
+          <option value="">Todas as categorias</option>
+        </select>
+      </div>
+
+      <!-- GALERIA -->
+      <div class="media-grid" id="media-container">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </section>
+
+    <!-- SEÇÃO: CATEGORIAS -->
+    <section id="tab-categorias" class="tab-pane" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>Gestão de Categorias</h2>
+        <button class="btn-primary" onclick="openCategoryModal()">+ Nova Categoria</button>
+      </div>
+      <div class="card-panel">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Ordem</th>
+              <th>Nome</th>
+              <th>Slug</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="list-categorias"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODAL DE CRIAR/EDITAR CATEGORIA -->
+    <div id="modal-category" class="modal-overlay" style="display:none;">
+      <div class="modal-container" style="max-width:520px; background:#FFF; padding:2rem; border-radius:12px;">
+        <h3 id="modal-category-title" style="margin-top:0;">Nova Categoria</h3>
+        <form id="form-category" onsubmit="handleSaveCategory(event)">
+          <input type="hidden" id="cat-id">
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Nome da Categoria *</label>
+            <input type="text" id="cat-name" required style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Slug (opcional, gerado automaticamente se vazio)</label>
+            <input type="text" id="cat-slug" placeholder="ex: casamentos" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Descrição</label>
+            <textarea id="cat-description" rows="3" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;"></textarea>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">URL da Imagem</label>
+            <input type="text" id="cat-image-url" placeholder="https://..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Ordem de Exibição</label>
+            <input type="number" id="cat-order" placeholder="0" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="cat-active" checked style="width:auto;">
+            <label for="cat-active" style="margin:0;">Categoria ativa (visível no site)</label>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:1.5rem;">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-category')">Cancelar</button>
+            <button type="submit" class="btn-primary">Salvar no Supabase</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SEÇÃO: TÍTULOS E CONTEÚDOS -->
+    <section id="tab-conteudos" class="tab-pane" style="display:none;">
+      <h2>Títulos e Textos Principais</h2>
+      <div id="content-titles-list"></div>
+    </section>
+
+    <!-- SEÇÃO: CONFIGURAÇÕES -->
+    <section id="tab-configuracoes" class="tab-pane" style="display:none;">
+      <h2>Configurações do Site</h2>
+      <div class="card-panel">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">Número do WhatsApp (com DDD):</label>
+        <input type="text" id="cfg-whatsapp" style="width:100%; max-width:400px; padding:10px; border-radius:8px; border:1px solid #E2D7D0;" placeholder="5511999999999">
+        <button class="btn-primary" style="margin-top:12px;" onclick="saveWhatsAppConfig()">Salvar Configuração</button>
+      </div>
+    </section>
+
+    <!-- SEÇÃO: COLEÇÕES (GERENCIAMENTO COMPLETO) -->
+    <section id="tab-colecoes" class="tab-pane" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>Gerenciamento de Coleções</h2>
+        <button class="btn-primary" onclick="openCollectionModal()">+ Nova Coleção</button>
+      </div>
+
+      <div class="card-panel">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Imagem</th>
+              <th>Nome</th>
+              <th>Estilo</th>
+              <th>Preço Ref.</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="list-colecoes-admin">
+            <!-- Inserido dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODAL DE CRIAR/EDITAR COLEÇÃO -->
+    <div id="modal-collection" class="modal-overlay" style="display:none;">
+      <div class="modal-container" style="max-width:550px; background:#FFF; padding:2rem; border-radius:12px;">
+        <h3 id="modal-collection-title" style="margin-top:0;">Nova Coleção</h3>
+        <form id="form-collection" onsubmit="handleSaveCollection(event)">
+          <input type="hidden" id="col-id">
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Nome da Coleção *</label>
+            <input type="text" id="col-title" required style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Estilo / Categoria</label>
+            <input type="text" id="col-style" placeholder="Ex: Casamento, Botânica..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Preço Ref. (R$) *</label>
+            <input type="number" step="0.01" id="col-price" placeholder="189.90" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">Descrição</label>
+            <textarea id="col-description" rows="3" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;"></textarea>
+          </div>
+
+          <div style="margin-bottom:12px;">
+            <label style="display:block; margin-bottom:4px;">URL da Imagem de Capa</label>
+            <input type="text" id="col-image-url" placeholder="https://..." style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:1.5rem;">
+            <button type="button" class="btn-secondary" onclick="closeModal('modal-collection')">Cancelar</button>
+            <button type="submit" class="btn-primary">Salvar no Supabase</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <section id="tab-portfolio" class="tab-pane" style="display:none;"><h2>Portfólio</h2><p>Gerencie projetos do portfólio.</p></section>
+    <section id="tab-servicos" class="tab-pane" style="display:none;"><h2>Serviços</h2><p>Gerencie cards de serviços.</p></section>
+    <section id="tab-depoimentos" class="tab-pane" style="display:none;"><h2>Depoimentos</h2><p>Gerencie avaliações dos clientes.</p></section>
+    <section id="tab-instagram" class="tab-pane" style="display:none;"><h2>Galeria Instagram</h2><p>Gerencie fotos da grade do Instagram.</p></section>
+
+  </main>
+</div>
+
+<!-- MODAL DE UPLOAD DE MÍDIA -->
+<div id="modal-upload" class="modal-overlay" style="display:none;">
+  <div class="modal-container">
+    <h3 style="margin-top:0;">Enviar Imagem para a Biblioteca</h3>
+    <form id="form-upload-media" onsubmit="handleUploadMedia(event)">
+      <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:4px;">Selecione o Arquivo (JPG, PNG, WebP - Max 5MB):</label>
+        <input type="file" id="upload-file" accept="image/jpeg,image/png,image/webp" required onchange="previewUploadImage(this)">
+      </div>
+      <div id="upload-preview-container" style="margin-bottom:12px; display:none;">
+        <img id="upload-preview-img" style="max-width:100%; max-height:200px; border-radius:8px;">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:4px;">Texto Alternativo (Alt):</label>
+        <input type="text" id="upload-alt" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;" placeholder="Descrição para acessibilidade">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:4px;">Legenda (Opcional):</label>
+        <input type="text" id="upload-caption" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:4px;">Categoria:</label>
+        <select id="upload-category" style="width:100%; padding:8px; border-radius:6px; border:1px solid #CCC;"></select>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn-secondary" onclick="closeModal('modal-upload')">Cancelar</button>
+        <button type="submit" class="btn-primary">Confirmar Upload</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!--
+  ORDEM DE CARREGAMENTO DOS SCRIPTS — importante:
+  1. data.js              -> fallbacks seguros + utilitários
+  2. supabase-config.js   -> define SUPABASE_URL / SUPABASE_ANON_KEY (fonte única de verdade)
+  3. supabase-service.js  -> cria o `supabaseClient` global e funções fetchSiteData/fetchSettings
+  4. supabase-client.js   -> adiciona o `ApiService` reaproveitando o mesmo supabaseClient
+  5. admin.js             -> lógica do painel
+-->
+<script src="js/data.js"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/supabase-service.js"></script>
+<script src="js/supabase-client.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

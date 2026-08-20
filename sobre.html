@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre a Raízes de Afeto | Ateliê & Design</title>
+  <meta name="description" content="Conheça o ateliê Raízes de Afeto. Especialistas em Arte, Papelaria Personalizada e Casamentos.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo"><img src="assets/logo/logo.png" alt="Raízes de Afeto"></a>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Início</a></li>
+          <li><a href="colecoes.html" class="nav-link">Coleções</a></li>
+          
+          <li><a href="sobre.html" class="nav-link active">Sobre</a></li>
+          <li><a href="contato.html" class="nav-link">Contato</a></li>
+          <li><a href="https://wa.me/5511932212956" target="_blank" class="btn btn-primary">Solicitar Orçamento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section style="padding: 10rem 0 5rem 0;" class="animate-on-scroll">
+    <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+      <div>
+        <img src="assets/images/about-atelier.jpg" alt="Ateliê Raízes de Afeto" style="width:100%; border-radius: 180px 180px 0 0;" onerror="this.src='assets/images/collection-placeholder.jpg'">
+      </div>
+      <div>
+        <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cor-texto-suave);">Nossa Essência</span>
+        <h1 style="font-size: 2.8rem; margin: 0.5rem 0 1.5rem 0;">Feito com afeto para celebrar histórias reais.</h1>
+        <p style="color: var(--cor-texto-suave); margin-bottom: 1rem;">
+          A Raízes de Afeto é um ateliê boutique dedicado à criação de <strong>Arte, Papelaria e momentos especiais para Casamentos</strong>. Acreditamos no valor do trabalho artesanal e na delicadeza de cada detalhe visual.
+        </p>
+        <p style="color: var(--cor-texto-suave); margin-bottom: 1.5rem;">
+          Seja através de uma ilustração autoral, uma identidade gráfica para celebrações ou peças de papelaria fina, nosso compromisso é materializar afetos e transformar ocasiões únicas em memórias perpétuas.
+        </p>
+        <a href="contato.html" class="btn btn-primary">Entre em contato</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer class="footer" style="padding: 4rem 0 2rem 0; border-top: 1px solid var(--cor-borda);">
+    <div class="container">
+      <div style="text-align: center; font-size: 0.85rem; color: var(--cor-texto-suave); padding-top: 1.5rem;">
+        <p>&copy; <span id="current-year"></span> Raízes de Afeto. Todos os direitos reservados. <a href="login.html" style="color: inherit; text-decoration: none;">Área Restrita</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <!--
+    Antes: esta página só carregava js/main.js, sem js/data.js.
+    Isso fazia o conteúdo com a classe "animate-on-scroll" nunca receber a
+    classe "is-visible" (adicionada pelo IntersectionObserver em data.js),
+    o que o mantinha com opacity:0 (definido no CSS) para sempre — por isso
+    a página aparecia "vazia". Agora todos os scripts necessários são
+    carregados, na mesma ordem usada nas outras páginas do site.
+  -->
+  <script src="js/data.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-service.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

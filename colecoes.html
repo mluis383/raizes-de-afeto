@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coleções Exclusivas | Raízes de Afeto</title>
+  <meta name="description" content="Conheça nossas coleções autorais de papelaria e arte com referências elegantes para celebrações inesquecíveis.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo"><img src="assets/logo/logo.png" alt="Raízes de Afeto"></a>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Início</a></li>
+          <li><a href="colecoes.html" class="nav-link active">Coleções</a></li>
+          
+          <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+          <li><a href="contato.html" class="nav-link">Contato</a></li>
+          <li><a href="https://wa.me/5511932212956" target="_blank" class="btn btn-primary">Solicitar Orçamento</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Seção Topo -->
+  <section style="padding: 10rem 0 4rem 0; text-align: center; background-color: var(--cor-fundo);">
+    <div class="container">
+      <span style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--cor-texto-suave);">Boutique Autoral</span>
+      <h1 style="font-size: 2.8rem; margin-top: 0.5rem;">Nossas Coleções</h1>
+      <p style="max-width: 600px; margin: 1rem auto 0 auto; color: var(--cor-texto-suave);">
+        Linhas conceituais e atemporais desenvolvidas para inspirar e encantar cada celebração.
+      </p>
+    </div>
+  </section>
+
+  <!-- Lista Dinâmica de Coleções -->
+  <section style="padding: 3rem 0 6rem 0;">
+    <div class="container">
+      <div id="collections-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem;">
+        <!-- Renderizado dinamicamente via JS do Supabase -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Botão Flutuante do WhatsApp -->
+  <a href="https://wa.me/5511932212956" target="_blank" class="raizes-whatsapp-btn">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.758.459 3.474 1.33 4.982L2 22l5.133-1.343c1.459.796 3.101 1.214 4.872 1.215h.004c5.505 0 9.987-4.477 9.988-9.984 0-2.665-1.038-5.172-2.925-7.058C17.187 2.943 14.678 2 12.012 2z"/></svg>
+    <span>Fale Conosco</span>
+  </a>
+
+  <script src="js/data.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-service.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const container = document.getElementById('collections-container');
+      let collections = [];
+
+      try {
+        collections = await fetchSiteData('collections');
+      } catch (err) {
+        console.error("Erro ao carregar do Supabase:", err);
+      }
+
+      if (!collections || collections.length === 0) {
+        container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">Nenhuma coleção disponível no momento.</p>';
+        return;
+      }
+
+      container.innerHTML = collections.map(col => {
+        const formattedPrice = col.price ? formatCurrency(col.price) : 'Sob consulta';
+        const waMsg = encodeURIComponent(`Olá! Gostaria de conhecer e solicitar um orçamento para a coleção "${col.title}".`);
+
+        return `
+          <article class="service-card" style="text-align: left; display: flex; flex-direction: column;">
+            <img src="${col.cover_image_url || 'assets/images/collection-placeholder.jpg'}" alt="${col.title}">
+            <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--cor-texto-suave); margin-bottom: 0.4rem;">
+              ${col.style || 'Coleção Boutique'}
+            </span>
+            <h3 style="font-size: 1.6rem; margin-bottom: 0.8rem;">${col.title}</h3>
+            <p style="color: var(--cor-texto-suave); margin-bottom: 1.5rem; flex-grow: 1; font-size: 0.95rem;">
+              ${col.description || ''}
+            </p>
+            <div class="collection-price">
+              <span>A partir de</span>
+              <strong>${formattedPrice}</strong>
+            </div>
+            <a href="https://wa.me/5511932212956?text=${waMsg}" target="_blank" class="btn btn-primary" style="width: 100%; margin-top: 1.2rem;">
+              Solicitar Orçamento
+            </a>
+          </article>
+        `;
+      }).join('');
+    });
+  </script>
+</body>
+</html>

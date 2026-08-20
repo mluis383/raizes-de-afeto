@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contato & Orçamento | Raízes de Afeto</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .contact-section { padding: 8rem 0 5rem 0; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 4rem; margin-top: 3rem; }
+    .form-group-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-feedback { margin-top: 1rem; padding: 1rem; border-radius: var(--borda-raio); display: none; }
+    .form-feedback.success { display: block; background: #e8f5e9; color: #2e7d32; }
+    .form-feedback.error { display: block; background: #ffebee; color: #c62828; }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo"><img src="assets/logo/logo.png" alt="Raízes de Afeto"></a>
+      <nav class="nav-menu">
+        <ul class="nav-list">
+          <li><a href="index.html" class="nav-link">Início</a></li>
+          <li><a href="colecoes.html" class="nav-link">Coleções</a></li>
+          
+          <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+          <li><a href="contato.html" class="nav-link active">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="contact-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Vamos criar juntos?</h2>
+        <p>Preencha os dados abaixo para receber uma proposta personalizada.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <h3>Atendimento Personalizado</h3>
+          <p style="margin-bottom: 1.5rem;">Cada projeto da Raízes de Afeto é único e desenvolvido com total dedicação. Conte-nos os detalhes do seu evento.</p>
+          <p><strong>Instagram:</strong> <a href="https://www.instagram.com/raizesdeafeto.br/" class="instagram-dynamic-link" target="_blank" rel="noopener noreferrer">@raizesdeafeto.br</a></p>
+        </div>
+
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="name">Nome completo *</label>
+            <input type="text" id="name" name="name" class="form-control" required>
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp *</label>
+              <input type="tel" id="whatsapp" name="whatsapp" class="form-control" required placeholder="(00) 00000-0000">
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="event_date">Data estimada do evento</label>
+              <input type="date" id="event_date" name="event_date" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="event_type">Tipo de evento</label>
+              <select id="event_type" name="event_type" class="form-control">
+                <option value="Casamento">Casamento</option>
+                <option value="Noivado">Noivado</option>
+                <option value="Aniversário">Aniversário</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="guest_count">Qtd. estimada de convidados</label>
+              <input type="number" id="guest_count" name="guest_count" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="city">Cidade / UF</label>
+              <input type="text" id="city" name="city" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="interest">Itens de interesse</label>
+            <input type="text" id="interest" name="interest" class="form-control" placeholder="Ex: Convites, menus, caixas de padrinhos">
+          </div>
+
+          <div class="form-group">
+            <label for="message">Mensagem ou detalhes da sua história</label>
+            <textarea id="message" name="message" rows="4" class="form-control"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Solicitar Orçamento</button>
+          <div id="form-feedback" class="form-feedback"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/data.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-service.js"></script>
+  <script src="js/form.js"></script>
+</body>
+</html>
